@@ -112,6 +112,10 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
   const currentValue = state.game.cells[currentIndex];
   const nextValue = state.game.cells[nextIndex];
 
+  //for(let i = 0, i > state.game.gridSize, i++){
+    //for()
+  //}
+
   return [
     composable(
       state,
