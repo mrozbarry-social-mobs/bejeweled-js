@@ -1,0 +1,16 @@
+{
+  "name": "bejewelled",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel serve src/index.html"
+  },
+  "devDependencies": {
+    "ava": "^3.15.0",
+    "composable-state": "^0.0.2",
+    "declarativas": "^0.0.1-beta.15",
+    "ferp": "^2.0.0",
+    "parcel": "^2.0.0-rc.0"
+  }
+}
