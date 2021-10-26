@@ -1,6 +1,6 @@
 /**
  * @jsx c
-G * @jsxFactory c
+ * @jsxFactory c
  */
 import { render, c } from 'declarativas';
 import { app, effects } from 'ferp';

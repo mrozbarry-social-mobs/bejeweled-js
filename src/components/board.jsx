@@ -70,17 +70,17 @@ const Jewels = {
   'parallelogram': (props) => <Parallelogram {...props} />,
 };
 
-export default (state) => Array.from({ length: state.game.gridSize }, (_, row) => {
-  return Array.from({ length: state.game.gridSize }, (_, column) => {
+export default (state) => state.game.cells.map((row, y) => {
+  return row.map((cell, x) => {
     const { position: cursor } = state.game.cursor;
-    const isCurrentCellHighlighted = cursor.x === column && cursor.y === row;
+    const isCurrentCellHighlighted = cursor.x === x && cursor.y === y;
 
-    const type = state.game.cells[row * state.game.gridSize + column].shape
-    const Jewel = Jewels[type] || (() => false);
+    const Jewel = Jewels[cell.shape] || (() => false);
     return (
-      <CellOutline x={column * boxSize} y={row * boxSize} size={boxSize} shouldHighlight={isCurrentCellHighlighted} isAnchored={state.game.cursor.anchor}>
+      <CellOutline x={x * boxSize} y={y * boxSize} size={boxSize} shouldHighlight={isCurrentCellHighlighted} isAnchored={state.game.cursor.anchor}>
 
-        <Jewel x={column * boxSize} y={row * boxSize} size={boxSize / 2} />
+        <Jewel x={x * boxSize} y={y * boxSize} size={boxSize / 2} />
+        
       </CellOutline>
     );
   });

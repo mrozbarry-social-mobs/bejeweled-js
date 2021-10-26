@@ -82,7 +82,7 @@ export const setLevel = (size) => (state) => {
         'game',
         selectAll({
           gridSize: replace(size),
-          cells: replace(Array.from({ length: size * size }, () => jewel(state.game.random))),
+          cells: replace(Array.from({ length: size }, () => Array.from( { length: size },  () => jewel(state.game.random)))),
           cursor: replace({
             interactive: false,
             position: { x: 0, y: 0 },
@@ -99,40 +99,29 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
     return Math.max(0, Math.min(state.game.gridSize - 1, value))
   }
 
-  // find current position in state
-  // calculate next position in state
-  // use math to convert x/y to index
-  // swap objects in state.game.cells array
-  // "commit" the cells to state
+  const currentPosition = state.game.cursor.position;
+  const nextPosition = { x: clamp(currentPosition.x + xMove), y: clamp(currentPosition.y + yMove) };
+  const currentValue = state.game.cells[currentPosition.y][currentPosition.x];
+  const nextValue = state.game.cells[nextPosition.y][nextPosition.x];
 
-  var currentPosition = state.game.cursor.position;
-  var nextPosition = { x: clamp(currentPosition.x + xMove), y: clamp(currentPosition.y + yMove) };
-  const currentIndex = (currentPosition.y * state.game.gridSize) + currentPosition.x
-  const nextIndex = (nextPosition.y * state.game.gridSize) + nextPosition.x;
-  const currentValue = state.game.cells[currentIndex];
-  const nextValue = state.game.cells[nextIndex];
-
-  //for(let i = 0, i > state.game.gridSize, i++){
-    //for()
-  //}
 
   return [
     composable(
-      state,
-      select(
-        'game',
-        selectAll({
-          'cursor.position': replace((position) => ({ x: clamp(position.x + xMove), y: clamp(position.y + yMove) })),
-          'cursor.anchor': replace(false),
-          'cells': state.game.cursor.anchor ? collect([
-            setIn(currentIndex, replace(nextValue)),
-            setIn(nextIndex, replace(currentValue)),
-          ]) : replace(oldCells => oldCells)
-        }),
-      )
+        state,
+        select(
+          'game',
+          selectAll({
+            'cursor.position': replace((position) => ({ x: clamp(position.x + xMove), y: clamp(position.y + yMove) })),
+            'cursor.anchor': replace(false),
+            'cells': state.game.cursor.anchor ? collect([
+              select(`${currentPosition.y}.${currentPosition.x}`, replace(nextValue)),
+              select(`${nextPosition.y}.${nextPosition.x}`, replace(currentValue)),
+            ]) : replace(oldCells => oldCells)
+          }),
+        )
     ),
     effects.none(),
-  ]
+  ];
 };
 
 export const setAnchor = (state) => { 
