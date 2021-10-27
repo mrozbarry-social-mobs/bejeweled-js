@@ -64,7 +64,6 @@ const make = (canvasDomElement, resolution) => {
   onWindowResize();
 
   window.addEventListener('keydown', (event) => {
-    event.preventDefault()
     switch (event.key) {
       case 'ArrowUp': 
         return dispatch(Actions.moveCursor(0, -1));

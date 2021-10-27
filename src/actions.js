@@ -10,10 +10,14 @@ function *notRandom(rndValue) {
 }
 
 const jewels = [
-  { shape: 'square', color: '#999' },
-  { shape: 'circle', color: '#999' },
-  { shape: 'triangle', color: '#999' },
-  { shape: 'parallelogram', color: '#999' },
+  '🗝️',
+  '🪙',
+  '🦜',
+  '❤️',
+  '💠',
+  '💎',
+  '👑',
+  '🧭',
 ];
 
 const jewel = (random) => {
