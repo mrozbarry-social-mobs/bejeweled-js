@@ -1,6 +1,7 @@
 import { collect, composable, replace, select, selectAll, setIn } from 'composable-state';
-import {effects} from 'ferp';
+import { effects } from 'ferp';
 
+import * as Themes from './themes';
 import * as Random from './random';
 
 function *notRandom(rndValue) {
@@ -9,26 +10,10 @@ function *notRandom(rndValue) {
   }
 }
 
-const jewels = [
-  '🗝️',
-  '🪙',
-  '🦜',
-  '❤️',
-  '💠',
-  '💎',
-  '👑',
-  '🧭',
-];
-
-const jewel = (random) => {
-  let foo = random.item(jewels);
-
-  return foo;
-};
-
 export const INITIAL_STATE = {
   game: {
     random: Random.make(notRandom(0)),
+    theme: Themes.base,
     gridSize: 0,
     cells: [],
     cursor: {
@@ -44,13 +29,13 @@ export const INITIAL_STATE = {
 
 export const updateResolution = (windowResolution, canvasResolution) => (state) => {
   const scaleValue = Math.min(
-    windowResolution.x / canvasResolution.x,
-    windowResolution.y / canvasResolution.y,
+    canvasResolution.x / windowResolution.x,
+    canvasResolution.y / windowResolution.y,
   );
 
   const rect = {
-    w: windowResolution.x * scaleValue,
-    h: windowResolution.y * scaleValue,
+    w: Math.floor(windowResolution.x * scaleValue),
+    h: Math.floor(windowResolution.y * scaleValue),
   };
 
   rect.x = (windowResolution.x - rect.w) / 2;
@@ -86,7 +71,7 @@ export const setLevel = (size) => (state) => {
         'game',
         selectAll({
           gridSize: replace(size),
-          cells: replace(Array.from({ length: size }, () => Array.from( { length: size },  () => jewel(state.game.random)))),
+          cells: replace(Array.from({ length: size }, () => Array.from( { length: size },  () => state.game.random.item(state.game.theme.generated)))),
           cursor: replace({
             interactive: false,
             position: { x: 0, y: 0 },

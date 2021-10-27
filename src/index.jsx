@@ -25,16 +25,21 @@ const make = (canvasDomElement, resolution) => {
     }
   }
 
+  const ClearScreen = ({ color = '#fff' }) => [
+      <fillStyle value={color} />,
+      <fillRect x={0} y={0} width={resolution.x} height={resolution.y} />,
+  ];
+
   const draw = (state) => render(
     canvasDomElement.getContext('2d'),
-    [
-      <save />,
-      
-      <fillStyle value="#fff" />,
-      <fillRect x={0} y={0} width={resolution.x} height={resolution.y} />,
-      <Board {...state} />,
-      <restore />,
-    ]
+    <g>
+      <save />
+      <ClearScreen />
+      <translate x={state.canvas.rect.x} y={state.canvas.rect.y} />
+      <scale x={state.canvas.scale.w} y={state.canvas.scale.h} />
+      <Board {...state} />
+      <restore />
+    </g>
   );
 
   const dispatch = app({

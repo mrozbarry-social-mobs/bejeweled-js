@@ -4,38 +4,52 @@
  */
 import { c } from 'declarativas';
 
-const CellOutline = ({x, y, size, shouldHighlight, isAnchored}, children) => [ 
-  <strokeStyle value="#a01" />,
-  <fillStyle value={isAnchored ? "#eae" : "#fbf"} />,
+const CellOutline = ({x, y, size, shouldHighlight, isAnchored}, children) => (
+  <g>
+    <strokeStyle value={isAnchored ? 'black' : '#ddd'} />
+    <lineWidth value={isAnchored ? 4 : 2} />
 
-  shouldHighlight && <fillRect x={x} y={y} width={size} height={size} />,
+    {shouldHighlight && <strokeRect x={x} y={y} width={size} height={size} />}
 
-  children,
-];
-const boxSize = 50;
+    {children}
+  </g>
+);
+const boxScale = 1/10;
 
-const Jewel = ({ x, y, size, character }) => [
-  <save />,
-  <translate x={(boxSize) / 2} y={(boxSize) / 2} />,
-  <font value={`${size}px sans-serif`} />,
-  <textAlign value="center" />,
-  <textBaseline value="middle" />,
-  <strokeStyle value="black" />,
-  <strokeText x={x} y={y} text={character} />,
-  <restore />
-];
+const Jewel = ({ x, y, size, character, boxSize }) => (
+  <g>
+    <save />
+    <translate x={(boxSize) / 2} y={(boxSize) / 2} />
+    <font value={`${size}px sans-serif`} />
+    <textAlign value="center" />
+    <textBaseline value="middle" />
+    <strokeStyle value="black" />
+    <strokeText x={x} y={y} text={character} />
+    <restore />
+  </g>
+);
 
-export default (state) => state.game.cells.map((row, y) => {
-  return row.map((cell, x) => {
-    const { position: cursor } = state.game.cursor;
-    const isCurrentCellHighlighted = cursor.x === x && cursor.y === y;
+export default (state) => {
+  const boxSize = boxScale * Math.min(state.canvas.rect.w, state.canvas.rect.h);
 
-    return (
-      <CellOutline x={x * boxSize} y={y * boxSize} size={boxSize} shouldHighlight={isCurrentCellHighlighted} isAnchored={state.game.cursor.anchor}>
+  return (
+    <g>
+      <translate
+        x={(state.canvas.rect.w - (state.game.gridSize * boxSize)) / 2}
+        y={(state.canvas.rect.h - (state.game.gridSize * boxSize)) / 2}
+      />
+      {state.game.cells.map((row, y) => row.map((cell, x) => {
+        const { position: cursor } = state.game.cursor;
+        const isCurrentCellHighlighted = cursor.x === x && cursor.y === y;
 
-        <Jewel x={x * boxSize} y={y * boxSize} size={boxSize / 1.4} character={cell} />
-        
-      </CellOutline>
-    );
-  });
-});
+        return (
+          <CellOutline x={x * boxSize} y={y * boxSize} size={boxSize} shouldHighlight={isCurrentCellHighlighted} isAnchored={state.game.cursor.anchor}>
+
+            <Jewel boxSize={boxSize} x={x * boxSize} y={y * boxSize} size={boxSize / (isCurrentCellHighlighted ? 1.2 : 1.6)} character={cell} />
+            
+          </CellOutline>
+        );
+      }))}
+    </g>
+  );
+}
