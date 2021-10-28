@@ -16,11 +16,3 @@ HTML:
 
 
 { op: 'strokeStyle', props: { value: '#f0f' }, children: [] }
-
-Hello, my name is alex
-
-Hello, my name is Ben,
-  you murdered my family and I will have revenge in this life or the nex
-
-Im going to get a coffe now
-Im a tea person

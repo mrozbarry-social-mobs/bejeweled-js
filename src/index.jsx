@@ -5,6 +5,7 @@
 import { render, c } from 'declarativas';
 import { app, effects } from 'ferp';
 import * as Actions from './actions';
+import { hasThreeInARow } from './helpers';
 
 import Board from './components/board.jsx';
 
@@ -27,7 +28,7 @@ const make = (canvasDomElement, resolution) => {
 
   const ClearScreen = ({ color = '#fff' }) => [
       <fillStyle value={color} />,
-      <fillRect x={0} y={0} width={resolution.x} height={resolution.y} />,
+      <fillRect x={0} y={0} width={canvasDomElement.width} height={canvasDomElement.height} />,
   ];
 
   const draw = (state) => render(
@@ -51,6 +52,8 @@ const make = (canvasDomElement, resolution) => {
       ]),
     ],
     observe: ([state]) => {
+      const thing = hasThreeInARow(state.game.cells);
+      console.log(thing);
       draw(state);
     },
   });
