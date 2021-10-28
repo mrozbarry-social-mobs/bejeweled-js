@@ -5,7 +5,7 @@
 import { render, c } from 'declarativas';
 import { app, effects } from 'ferp';
 import * as Actions from './actions';
-import { hasThreeInARow } from './helpers';
+import { hasAnyMatches } from './helpers';
 
 import Board from './components/board.jsx';
 
@@ -52,7 +52,7 @@ const make = (canvasDomElement, resolution) => {
       ]),
     ],
     observe: ([state]) => {
-      const thing = hasThreeInARow(state.game.cells);
+      const thing = hasAnyMatches(state.game.cells);
       console.log(thing);
       draw(state);
     },
