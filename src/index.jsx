@@ -52,8 +52,6 @@ const make = (canvasDomElement, resolution) => {
       ]),
     ],
     observe: ([state]) => {
-      const thing = hasAnyMatches(state.game.cells);
-      console.log(thing);
       draw(state);
     },
   });
