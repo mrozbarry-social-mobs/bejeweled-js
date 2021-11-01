@@ -20,11 +20,11 @@ const Jewel = ({ x, y, size, character, boxSize }) => (
   <g>
     <save />
     <translate x={(boxSize) / 2} y={(boxSize) / 2} />
-    <font value={`${size}px sans-serif`} />
+    <font value={`${character ? size : size * 1.75}px sans-serif`} />
     <textAlign value="center" />
     <textBaseline value="middle" />
     <strokeStyle value="black" />
-    <strokeText x={x} y={y} text={character} />
+    <strokeText x={x} y={y} text={character || '💥'} />
     <restore />
   </g>
 );
