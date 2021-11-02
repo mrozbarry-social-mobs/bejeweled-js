@@ -89,6 +89,12 @@ test('Can detect 5 in a column', (t) => {
   ])
 });
 
-test.skip('does not explode if the value of the cell with 3+ in a row or column is empty', (t) => {
-  
+test('does not explode if the value of the cell with 3+ in a row or column is empty', (t) => {
+  const cells = [
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', ''],
+  ]; 
+
+  t.deepEqual(hasAnyMatches(cells), []);
 });

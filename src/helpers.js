@@ -11,6 +11,7 @@ export const hasAnyColumnMatches = (cells) => {
     const column = Array.from({ length: cells.length }, (_, y) => cells[y][x]);
     for (let y = 0; y < column.length - 2; y++) {
       const emoji = column[y];
+      if (emoji === '') continue;
 
       const hasFiveEmojisInARow = [1, 2, 3, 4].every((length) => column[y + length] == emoji);
       if (hasFiveEmojisInARow) {
@@ -45,6 +46,7 @@ export const hasAnyRowMatches = (cells) => {
     const row = cells[y];
     for (let x = 0; x < row.length - 2; x++) {
       const emoji = row[x];
+      if (emoji === '') continue;
 
       const hasFiveEmojisInARow = [1, 2, 3, 4].every((length) => row[x + length] == emoji);
       if (hasFiveEmojisInARow) {
