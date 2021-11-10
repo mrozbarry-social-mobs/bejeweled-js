@@ -2,11 +2,11 @@ import test from 'ava';
 import { effects } from 'ferp';
 import * as Actions from './actions.js';
 
-test('initial state is consistent', (t) => {
+test.skip('initial state is consistent', (t) => {
   t.snapshot(Actions.INITIAL_STATE);
 });
 
-test('can update screen resolution', (t) => {
+test.skip('can update screen resolution', (t) => {
   const windowResolution = { x: 2, y: 2 };
   const canvasResolution = { x: 1, y: 1 };
 

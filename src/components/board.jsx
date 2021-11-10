@@ -29,6 +29,18 @@ const Jewel = ({ x, y, size, character, boxSize }) => (
   </g>
 );
 
+const RemainingSwaps = ({remainingSwaps}) => (
+  <g>
+    <save /> 
+    <font value={`64px sans-serif`} />
+    <strokeStyle value="black" />
+    <strokeText x={0} y={0} text={remainingSwaps} />
+    <restore />
+  </g>
+);
+
+
+
 export default (state) => {
   const boxSize = boxScale * Math.min(state.canvas.rect.w, state.canvas.rect.h);
 
@@ -38,6 +50,7 @@ export default (state) => {
         x={(state.canvas.rect.w - (state.game.gridSize * boxSize)) / 2}
         y={(state.canvas.rect.h - (state.game.gridSize * boxSize)) / 2}
       />
+      <RemainingSwaps remainingSwaps={state.game.remainingSwaps} />  
       {state.game.cells.map((row, y) => row.map((cell, x) => {
         const { position: cursor } = state.game.cursor;
         const isCurrentCellHighlighted = cursor.x === x && cursor.y === y;

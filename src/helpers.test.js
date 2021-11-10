@@ -1,5 +1,5 @@
 import test from 'ava';
-import {hasAnyMatches} from './helpers';
+import {hasAnyMatches,hasAnyPotentialMoves} from './helpers';
 
 test('Can detect 3 in a row', (t) => {
   const cells = [
@@ -97,4 +97,26 @@ test('does not explode if the value of the cell with 3+ in a row or column is em
   ]; 
 
   t.deepEqual(hasAnyMatches(cells), []);
+});
+
+test('that it returns true if it has potential moves', (t) => {
+  const cells = [
+    [1, 1, 0, 2, 4],
+    [2, 2, 0, 3, 3],
+    [3, 3, 1, 0, 4],
+    [4, 4, 0, 3, 1],
+    [4, 4, 0, 3, 1],
+  ];
+  t.truthy(hasAnyPotentialMoves(cells));
+});
+
+test('returns false if no valid moves', (t) => {
+  const cells = [
+    [1, 1, 0, 2, 4],
+    [2, 2, 0, 3, 3],
+    [3, 3, 1, 2, 4],
+    [4, 4, 2, 3, 1],
+    [4, 4, 0, 3, 1],
+  ];
+  t.falsy(hasAnyPotentialMoves(cells));
 });

@@ -1,4 +1,4 @@
-import { collect, composable, replace, select, selectAll, setIn } from 'composable-state';
+import { collect composable, replace, select, selectAll, setIn } from 'composable-state';
 import { effects } from 'ferp';
 
 import * as Themes from './themes';
@@ -22,6 +22,7 @@ export const INITIAL_STATE = {
       position: { x: 0, y: 0 },
       anchor: false
     },
+    remainingSwaps: 1,
   },
   canvas: {
     scale: { x: 1, y: 1 },
@@ -75,13 +76,13 @@ export const setLevel = (size) => (state) => {
           gridSize: replace(size),
           cells: replace(Array.from({ length: size }, () => Array.from({ length: size }, () => state.game.random.item(state.game.theme.generated)))),
           cursor: replace({
-            interactive: false,
+            anchor: false,
             position: { x: 0, y: 0 },
           }),
         }),
       ),
     ),
-    effects.act(removeMatches),
+    effects.act(removeMatches()),
   ];
 };
 
@@ -113,7 +114,15 @@ export const validateBoard = (state) => {
 };
 
 
-export const removeMatches = (state) => {
+export const detectUnplayableBoard = (state) => {
+  // console.log('Unplayable check', Date.now(), anyMoves);
+  return [
+    state,
+    effects.none(),
+  ];
+};
+
+export const removeMatches = (revertAction) => (state) => {
   const matches = hasAnyMatches(state.game.cells);
 
   return [
@@ -129,9 +138,13 @@ export const removeMatches = (state) => {
     ),
     matches.length
       ? effects.act(applyGravity(matches))
-      : effects.act(validateBoard)
+      : (revertAction ? delay(revertAction) : effects.act(detectUnplayableBoard))
   ]
 };
+
+export const delay = (action, ms = 250) => {
+  return effects.defer((done) => setTimeout(() => done(effects.act(action)), ms))
+}
 
 export const applyGravity = (positions = []) => (state) => {
   const nextPositions = positions
@@ -144,10 +157,10 @@ export const applyGravity = (positions = []) => (state) => {
       select(
         'game.cells',
         replace((oldCells) => positions.reduce((newCells, { x, y }) => {
-          if (y > 0) {
+          if (y > 0 && newCells[y - 1][x] !== '') {
             newCells[y][x] = newCells[y - 1][x]
             newCells[y - 1][x] = '';
-          } else {
+          } else if (y === 0) {
             newCells[y][x] = state.game.random.item(state.game.theme.generated);
           }
           return newCells;
@@ -155,10 +168,15 @@ export const applyGravity = (positions = []) => (state) => {
       ),
     ),
     nextPositions.length
-      ? effects.defer((done) => setTimeout(() => done(effects.act(applyGravity(nextPositions))), 250))
-      : effects.act(removeMatches)
+      ? delay(applyGravity(nextPositions))
+      : effects.act(removeMatches())
   ];
 };
+
+export const resetState = (oldState) => () => [
+  oldState,
+  effects.none(),
+];
 
 export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
   function clamp(value) {
@@ -177,6 +195,7 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
       select(
         'game',
         selectAll({
+          'remainingSwaps': replace(remainingSwaps => (state.game.cursor.anchor ? remainingSwaps - 1 : remainingSwaps)),
           'cursor.position': replace((position) => ({ x: clamp(position.x + xMove), y: clamp(position.y + yMove) })),
           'cursor.anchor': replace(false),
           'cells': state.game.cursor.anchor ? collect([
@@ -187,8 +206,8 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
       )
     ),
     state.game.cursor.anchor
-      ? effects.act(removeMatches)
-      : effects.none(),
+      ? effects.act(removeMatches(resetState(state)))
+      : effects.none()
   ];
 };
 
