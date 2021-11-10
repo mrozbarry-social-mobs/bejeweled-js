@@ -40,7 +40,6 @@ export const pirate = extend(
     '💎',
     '⛵',
     '🧭',
-    'arrh',
   ]),
   merge({
     clearNearby: '🧨',

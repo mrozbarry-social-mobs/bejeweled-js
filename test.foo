@@ -1,4 +1,8 @@
-hello he this is joey
-test 
-he 
-this is joe
+--1. Only allow swaps that are valid--
+2. Detect if there are no matches on the board, regenerate
+3. Score, related to number of emoji removed per move
+--4. Move counter--
+5. See if there is a bug in vertical matching
+6. Animate emoji falling downward
+  * Don't allow swaps while animations are present
+

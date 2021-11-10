@@ -13,6 +13,17 @@ JSON:
 HTML:
 
 <div>Hello</div>
-
+Wuddup
 
 { op: 'strokeStyle', props: { value: '#f0f' }, children: [] }
+
+
+ksdfjsndfksfkn
+
+
+
+
+Hello Brady, welcome to vim
+I am here with you Alex!!!
+  down here
+some beautiful text
