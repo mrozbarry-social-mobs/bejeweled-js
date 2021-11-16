@@ -4,6 +4,7 @@ import { effects } from 'ferp';
 import * as Themes from './themes';
 import * as Random from './random';
 import { hasAnyMatches } from './helpers';
+import { swapCheck } from './lib/swapCheck';
 
 function* notRandom(rndValue) {
   while (true) {
@@ -14,7 +15,7 @@ function* notRandom(rndValue) {
 export const INITIAL_STATE = {
   game: {
     random: Random.make(notRandom(0)),
-    theme: Themes.base,
+    theme: Themes.pirate,
     gridSize: 0,
     cells: [],
     cursor: {
@@ -84,6 +85,34 @@ export const setLevel = (size) => (state) => {
   ];
 };
 
+export const regenerateBoard = (state) => {
+  const size = state.game.gridSize;
+  return [
+    composable(
+      state,
+      select(
+        'game',
+        selectAll({
+          cells: replace(Array.from({ length: size }, () => Array.from({ length: size }, () => state.game.random.item(state.game.theme.generated)))),
+        }),
+      ),
+    ),
+    effects.act(removeMatches),
+  ];
+};
+
+export const validateBoard = (state) => {
+  const isValid = swapCheck(state.game.cells);
+
+  return [
+    state,
+    isValid
+      ? effects.none()
+      : effects.act(regenerateBoard)
+  ];
+};
+
+
 export const removeMatches = (state) => {
   const matches = hasAnyMatches(state.game.cells);
 
@@ -100,7 +129,7 @@ export const removeMatches = (state) => {
     ),
     matches.length
       ? effects.act(applyGravity(matches))
-      : effects.none()
+      : effects.act(validateBoard)
   ]
 };
 
@@ -157,7 +186,9 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
         }),
       )
     ),
-    effects.act(removeMatches),
+    state.game.cursor.anchor
+      ? effects.act(removeMatches)
+      : effects.none(),
   ];
 };
 
