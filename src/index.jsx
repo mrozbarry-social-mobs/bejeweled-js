@@ -2,10 +2,9 @@
  * @jsx c
  * @jsxFactory c
  */
-import { render, c } from 'declarativas';
-import { app, effects } from 'ferp';
+import {render, c} from 'declarativas';
+import {app, effects} from 'ferp';
 import * as Actions from './actions';
-import { hasAnyMatches } from './helpers';
 
 import Board from './components/board.jsx';
 
@@ -20,15 +19,15 @@ const debounce = (fn, ms) => {
 };
 
 const make = (canvasDomElement, resolution) => {
-  function *mathRandom() {
+  function* mathRandom() {
     while (true) {
       yield Math.random();
     }
   }
 
-  const ClearScreen = ({ color = '#fff' }) => [
-      <fillStyle value={color} />,
-      <fillRect x={0} y={0} width={canvasDomElement.width} height={canvasDomElement.height} />,
+  const ClearScreen = ({color = '#fff'}) => [
+    <fillStyle value={color} />,
+    <fillRect x={0} y={0} width={canvasDomElement.width} height={canvasDomElement.height} />,
   ];
 
   const draw = (state) => render(
@@ -61,7 +60,7 @@ const make = (canvasDomElement, resolution) => {
     canvasDomElement.height = window.innerHeight;
 
     dispatch(Actions.updateResolution(
-      { x: window.innerWidth, y: window.innerHeight },
+      {x: window.innerWidth, y: window.innerHeight},
       resolution,
     ));
   }, 250);
@@ -71,7 +70,7 @@ const make = (canvasDomElement, resolution) => {
 
   window.addEventListener('keydown', (event) => {
     switch (event.key) {
-      case 'ArrowUp': 
+      case 'ArrowUp':
         return dispatch(Actions.moveCursor(0, -1));
 
       case 'ArrowDown':
@@ -85,13 +84,13 @@ const make = (canvasDomElement, resolution) => {
 
       case 'Enter':
         return dispatch(Actions.setAnchor);
-      }
+    }
 
-    
+
   });
 };
 
 make(
   document.querySelector('canvas#game'),
-  { x: 1024, y: 768 },
+  {x: 1024, y: 768},
 );

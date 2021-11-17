@@ -6,12 +6,14 @@ import { c } from 'declarativas';
 
 const CellOutline = ({x, y, size, shouldHighlight, isAnchored}, children) => (
   <g>
+    <save />
     <strokeStyle value={isAnchored ? 'black' : '#ddd'} />
     <lineWidth value={isAnchored ? 4 : 2} />
 
     {shouldHighlight && <strokeRect x={x} y={y} width={size} height={size} />}
 
     {children}
+    <restore />
   </g>
 );
 const boxScale = 1/10;
@@ -24,7 +26,7 @@ const Jewel = ({ x, y, size, character, boxSize }) => (
     <textAlign value="center" />
     <textBaseline value="middle" />
     <strokeStyle value="black" />
-    <strokeText x={x} y={y} text={character || '💥'} />
+    <strokeText x={x} y={y} text={character || ' ' || '💥'} />
     <restore />
   </g>
 );
@@ -33,8 +35,8 @@ const RemainingSwaps = ({remainingSwaps}) => (
   <g>
     <save /> 
     <font value={`64px sans-serif`} />
-    <strokeStyle value="black" />
-    <strokeText x={0} y={0} text={remainingSwaps} />
+    <fillStyle value="black" />
+    <fillText x={0} y={0} text={remainingSwaps} />
     <restore />
   </g>
 );
