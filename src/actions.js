@@ -16,7 +16,7 @@ function* notRandom(rndValue) {
 export const INITIAL_STATE = {
   game: {
     random: Random.make(notRandom(0)),
-    theme: Themes.pirate,
+    theme: Themes.base,
     gridSize: 0,
     cells: [],
     cursor: {
