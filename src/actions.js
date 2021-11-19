@@ -1,6 +1,6 @@
 import {collect composable, replace, select, selectAll, setIn} from 'composable-state';
 import {effects} from 'ferp';
-import {delay,playBackground} from './effects.js';
+import {delay} from './effects.js';
 
 import * as Themes from './themes';
 import * as Random from './random';
@@ -25,10 +25,38 @@ export const INITIAL_STATE = {
     },
     remainingSwaps: 50,
   },
+  audio: {
+    music: {
+      playing: false,
+      querySelector: 'audio#background',
+    }
+  },
   canvas: {
     scale: {x: 1, y: 1},
     rect: {x: 0, y: 0, w: 800, h: 600},
   },
+};
+
+export const audioToggleMusic = (state) => {
+  const toggle = !state.audio.music.playing;
+  return [
+    composable(
+      state,
+      select(
+        'audio.music.playing', replace(toggle),
+      ),
+    ),
+    effects.thunk(() => {
+      const audio = document.querySelector(state.audio.music.querySelector);
+      if (toggle) {
+        audio.volume = 0.3;
+        audio.play();
+      } else {
+        audio.pause();
+      }
+      return effects.none();
+    }),
+  ];
 };
 
 export const updateResolution = (windowResolution, canvasResolution) => (state) => {
@@ -137,9 +165,9 @@ export const removeMatches = (revertAction) => (state) => {
 
 export const applyGravity = (state) => {
   const emptyCells = state.game.cells.reduce((empties, row, y) => {
-    for(let x = 0; x < row.length; x++) {
+    for (let x = 0; x < row.length; x++) {
       if (row[x]) continue;
-      empties.push({ x, y });
+      empties.push({x, y});
     }
     return empties;
   }, []);
@@ -157,7 +185,7 @@ export const applyGravity = (state) => {
       return ends;
     }, {});
 
-  const columnBottoms = Object.keys(columnEnds).map(x => ({ x, y: columnEnds[x] }));
+  const columnBottoms = Object.keys(columnEnds).map(x => ({x, y: columnEnds[x]}));
 
   return [
     composable(

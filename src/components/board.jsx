@@ -3,7 +3,7 @@
  * @jsxFactory c
  */
 import { c } from 'declarativas';
-import { BackgroundMusic } from './audio.jsx';
+import { AudioControl } from './audio-control.jsx';
 
 const CellOutline = ({x, y, size, shouldHighlight, isAnchored}, children) => (
   <g>
@@ -66,7 +66,7 @@ export default (state) => {
           </CellOutline>
         );
       }))}
-      <BackgroundMusic muted={true} x={state.game.gridSize * boxSize} />
+      <AudioControl {...state.audio.music} x={state.game.gridSize * boxSize} />
     </g>
   );
 }
