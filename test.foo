@@ -1,8 +1,20 @@
---1. Only allow swaps that are valid--
-2. Detect if there are no matches on the board, regenerate
-3. Score, related to number of emoji removed per move
---4. Move counter--
-5. See if there is a bug in vertical matching
-6. Animate emoji falling downward
-  * Don't allow swaps while animations are present
+1. Score for each user-initiated? match. for every tile destroyed, 10pts
+2. Game over state. No more moves, don't allow more swaps, maybe a different screen?
+3. Undo
+4. Shapes generated special tiles. 5 in a row = clear all of same type tile, 4 in row = clear in a direction
+5. Use images instead of emoji
+6. Background music
+7. Config/settings page
+8. Menu page (new game, about, ...)
+9. Highscores
+10. cheat codes
+11. more obvious explosions/effects
+12. disable moves while still processing the board
+13. Different game modes
+  - Limited moves with goals
+  - Infinite with challenges/mutators
 
+
+
+
+hey, this is a sentence
