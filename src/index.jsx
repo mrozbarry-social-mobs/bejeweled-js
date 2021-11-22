@@ -84,8 +84,12 @@ const make = (canvasDomElement, resolution) => {
 
       case 'Enter':
         return dispatch(Actions.setAnchor);
+
       case 'm':
         return dispatch(Actions.audioToggleMusic);
+
+      case 'u':
+        return dispatch(Actions.undoMove);
     }
 
 

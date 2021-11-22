@@ -24,6 +24,12 @@ export const INITIAL_STATE = {
       anchor: false
     },
     remainingSwaps: 50,
+    undo: {
+      cells: [],
+      cursor: {
+        position: {x: 0, y: 0},
+      },
+    },
   },
   audio: {
     music: {
@@ -96,6 +102,8 @@ export const setRandom = (generator) => (state) => {
 };
 
 export const setLevel = (size) => (state) => {
+  const cells = Array.from({length: size}, () => Array.from({length: size}, () => state.game.random.item(state.game.theme.generated)));
+
   return [
     composable(
       state,
@@ -103,7 +111,9 @@ export const setLevel = (size) => (state) => {
         'game',
         selectAll({
           gridSize: replace(size),
-          cells: replace(Array.from({length: size}, () => Array.from({length: size}, () => state.game.random.item(state.game.theme.generated)))),
+          cells: replace(cells),
+          'undo.cells': replace(cells),
+          'undo.cursor.position': replace({x: 0, y: 0}),
           cursor: replace({
             anchor: false,
             position: {x: 0, y: 0},
@@ -237,7 +247,11 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
           'cells': state.game.cursor.anchor ? collect([
             select(`${currentPosition.y}.${currentPosition.x}`, replace(nextValue)),
             select(`${nextPosition.y}.${nextPosition.x}`, replace(currentValue)),
-          ]) : replace(oldCells => oldCells)
+          ]) : replace(oldCells => oldCells),
+          'undo': state.game.cursor.anchor ? collect([
+            select('cells', replace(state.game.cells)),
+            select('cursor.position', replace(state.game.cursor.position)),
+          ]) : replace(undo => undo),
         }),
       )
     ),
@@ -257,5 +271,22 @@ export const setAnchor = (state) => {
       )
     ),
     effects.none(),
-  ]
-}
+  ];
+};
+
+export const undoMove = (state) => {
+  return [
+    composable(
+      state,
+      select(
+        'game',
+        selectAll({
+          cells: replace(state.game.undo.cells),
+          'cursor.position': replace(state.game.undo.cursor.position),
+          'cursor.anchor': replace(false),
+        }),
+      )
+    ),
+    effects.none(),
+  ];
+};
