@@ -12,6 +12,8 @@
 13. Different game modes
   - Limited moves with goals
   - Infinite with challenges/mutators
+14. Generate "ready" boards (no pending matches)
+15. Don't allow anchor/swap while processing matches
 
 
 

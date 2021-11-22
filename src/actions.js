@@ -233,7 +233,7 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
   const nextPosition = {x: clamp(currentPosition.x + xMove), y: clamp(currentPosition.y + yMove)};
   const currentValue = state.game.cells[currentPosition.y][currentPosition.x];
   const nextValue = state.game.cells[nextPosition.y][nextPosition.x];
-
+  const resetPreviousState = composable(state, select('game.cursor.anchor', replace(false)));
 
   return [
     composable(
@@ -256,7 +256,7 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
       )
     ),
     state.game.cursor.anchor
-      ? effects.act(removeMatches(resetState(state)))
+      ? effects.act(removeMatches(resetState(resetPreviousState)))
       : effects.none()
   ];
 };
