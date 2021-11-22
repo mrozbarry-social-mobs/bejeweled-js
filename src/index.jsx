@@ -90,6 +90,12 @@ const make = (canvasDomElement, resolution) => {
 
       case 'u':
         return dispatch(Actions.undoMove);
+
+      case 'z':
+        if (event.ctrlKey || event.metaKey) {
+          return dispatch(Actions.undoMove)
+        }
+        return;
     }
 
 
