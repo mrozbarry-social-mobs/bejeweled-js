@@ -23,6 +23,7 @@ export const INITIAL_STATE = {
       position: {x: 0, y: 0},
       anchor: false
     },
+    boardLocked: false,
     remainingSwaps: 50,
     undo: {
       cells: [],
@@ -152,20 +153,19 @@ export const validateBoard = (state) => {
   ];
 };
 
-
 export const removeMatches = (revertAction) => (state) => {
   const matches = hasAnyMatches(state.game.cells);
 
   return [
     composable(
       state,
-      select(
-        'game.cells',
-        replace((oldCells) => matches.reduce((newCells, {x, y}) => {
+      selectAll({
+        'game.cells': replace((oldCells) => matches.reduce((newCells, {x, y}) => {
           newCells[y][x] = '';
           return newCells;
         }, JSON.parse(JSON.stringify(oldCells)))),
-      ),
+        'game.boardLocked': replace(matches.length > 0)
+      }),
     ),
     matches.length
       ? delay(applyGravity)
@@ -200,9 +200,9 @@ export const applyGravity = (state) => {
   return [
     composable(
       state,
-      select(
-        'game.cells',
-        replace((oldCells) => {
+      selectAll({
+        'game.boardLocked': replace(true),
+        'game.cells': replace((oldCells) => {
           return columnBottoms.reduce((newCells, columnBottom) => {
             if (columnBottom.y > 0) {
               newCells[columnBottom.y][columnBottom.x] = oldCells[columnBottom.y - 1][columnBottom.x];
@@ -213,7 +213,7 @@ export const applyGravity = (state) => {
             return newCells;
           }, JSON.parse(JSON.stringify(oldCells)));
         }),
-      ),
+      }),
     ),
     delay(applyGravity, 200),
   ];
@@ -262,6 +262,10 @@ export const moveCursor = (xMove = 0, yMove = 0) => (state) => {
 };
 
 export const setAnchor = (state) => {
+  if (state.game.boardLocked) {
+    return [state, effects.none()];
+  }
+
   return [
     composable(
       state,

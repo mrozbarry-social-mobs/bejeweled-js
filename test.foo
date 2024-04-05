@@ -1,8 +1,9 @@
 1. Score for each user-initiated? match. for every tile destroyed, 10pts
 2. Game over state. No more moves, don't allow more swaps, maybe a different screen?
-3. Undo
+3. ~~Undo~~
 4. Shapes generated special tiles. 5 in a row = clear all of same type tile, 4 in row = clear in a direction
 5. Use images instead of emoji
+6. ʕ •ᴥ•ʔ
 7. Config/settings page
 8. Menu page (new game, about, ...)
 9. Highscores
@@ -13,9 +14,10 @@
   - Limited moves with goals
   - Infinite with challenges/mutators
 14. Generate "ready" boards (no pending matches)
-15. Don't allow anchor/swap while processing matches
 
+--------
 
-
-
-hey, this is a sentence
+Hello, this is Alex Prim
+Hello, this is also Alex Prim
+Hello, this is not Alex Prim or also Alex Prim
+Hello, 420 no scope
